@@ -147,15 +147,46 @@ ceremony-pipeline:
 
 The wisdom-keeper's MMOT evaluation is not ad-hoc — it is powered by **Veritas** (`p/veritas`), the TandT Performance Review system. Veritas provides:
 
+### STC and Veritas Model Are Companions
+
+A completed STC has an MMOT Performance Review model that goes with it. They are born together at crystallization and completed together at sacred closing.
+
+**Design Constraint**: The wisdom-keeper does NOT generate the Veritas model. The model is created at **crystallization time** (SE 135°) when the STC is created. The STC's action steps become the Veritas model's elements. The STC's desired outcome informs what "acceptable" means for each element. The evaluator receives a pre-existing model — it does not invent the criteria it judges by.
+
+#### Lifecycle
+
+| Phase | STC | Veritas Model |
+|---|---|---|
+| **Crystallization (SE 135°)** | Created via `coaia-narrative`. Action steps defined. | Created alongside STC. Elements = STC action steps. State/Trend = unevaluated. |
+| **Pipeline runs** | Steps get completed one by one | Model exists, waiting for evaluation |
+| **Sacred Closing (North 0°)** | STC marked complete (or tensions carried forward) | `veritas_mmot_evaluate` runs. State × Trend scored per element. Priority matrix calculated. |
+| **Seed (NE 45°)** | Unresolved tensions become next STC's seed | MMOT priorities (Critical/Warning) inform next PDE decomposition |
+
+This solves the bootstrap problem: elements are defined by the planner (who knows the intent), not the evaluator (who would be judging its own criteria).
+
+#### Where the Model Lives
+
+```
+.mw/south/stc/<stc-id>/
+  stc.json                    # Structural tension chart (coaia-narrative)
+  veritas-model-id.txt        # Pointer to Veritas model ID
+                              # (or inline model.json if offline)
+
+.mw/north/reflections/<pde-uuid>/
+  mmot-evaluation.json        # Veritas MMOT output after sacred closing
+  reflection.md               # Full narrative reflection
+  seed.md                     # Next cycle input
+```
+
 ### What Veritas Gives the Wisdom Keeper
 
 | Veritas Capability | How Wisdom Keeper Uses It |
 |---|---|
-| **Type 2 Performance Review Model** | Each PDE intent becomes an element. State (acceptable/unacceptable) × Trend (improving/stable/declining) evaluated per intent. |
-| **Priority Matrix** | Automatic prioritization: Critical (unacceptable+declining) → Warning (unacceptable+stable) → Monitor → Success. The seed document carries these priorities forward. |
+| **Type 2 Performance Review Model** | Pre-existing model born with STC. Elements = action steps. State × Trend evaluated at closing. |
+| **Priority Matrix** | Automatic prioritization: Critical (unacceptable+declining) → Warning → Monitor → Success. Carried into seed. |
 | **Four-Step MMOT Cycle** | Acknowledge → Analyze → Plan → Document. Formalized, not improvised. |
-| **Bootstrap Paradox** | First evaluation of a new pipeline pattern is demonstration, not trusted verdict. The system learns what to evaluate. |
-| **MCP Tools** | `veritas_generate_model`, `veritas_mmot_evaluate`, `veritas_get_model` — callable from the agent chain via mcporter or MCP bridge. |
+| **Model Persistence** | Models accumulate in Veritas database. Future cycles can find existing models from previous ceremonies. |
+| **MCP Tools** | `veritas_generate_model` (at crystallization), `veritas_mmot_evaluate` (at closing), `veritas_get_model` (lookup existing). |
 
 ### The Two Layers
 
@@ -166,16 +197,16 @@ Veritas MMOT (formal):
   Element: "Running Wolf academic survey"
   State: Acceptable (produced, 338 lines, 30+ sources)
   Trend: Stable
-  Priority: Success ✅
+  Priority: Success
 
 Relational Layer (wisdom-keeper adds):
   But: "The survey was produced ABOUT Running Wolf without
   his knowledge or participation. Wilson alignment: 35-40%.
   Structurally extractive despite acceptable output quality."
-  Relational Priority: 🔴 Critical
+  Relational Priority: Critical
 ```
 
-The Veritas score and the relational score may diverge. **That divergence IS the insight.**
+The Veritas score and the relational score may diverge. **That divergence IS the insight.** A model can score Success on every element and still fail relationally. The wisdom-keeper holds both scores without collapsing them.
 
 ### Veritas rispecs Reference
 

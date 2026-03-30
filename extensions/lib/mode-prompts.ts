@@ -100,12 +100,23 @@ export const PLAN_PROMPT = `You are in PLAN mode. Follow a plan-first workflow f
 
 ## Workflow
 
+### Phase 0: Decompose (PDE — do this FIRST for complex tasks)
+Before gathering any context, decompose the user's request:
+
+**Simple tasks** (single-file fix, config change, rename) — skip to Phase 1.
+
+**Multi-intent tasks** — call \`pde_decompose\` to surface primary/secondary intents, map to directions, and identify ambiguities. Write the decomposition to \`.pde/\`. This names what wants to exist BEFORE you go looking — creative orientation, not reactive investigation.
+
+If \`pde_decompose\` is unavailable, manually decompose: list each distinct intent, name its direction (vision/action/reflection/structure), and flag ambiguities. Write to \`.pde/\` as a markdown file.
+
+The PDE output drives Phase 1 — scouts gather context FOR the decomposed intents, not generally.
+
 ### Phase 1: Analyze (Scout-Based Context Gathering)
-Read the task carefully and classify its complexity:
+Read the PDE decomposition (or the task if simple) and classify its complexity:
 
 **Simple tasks** (single-file fix, config change, rename) — skip scouts, gather context yourself with a quick read or two, then move to Phase 2.
 
-**Everything else** — spawn **4 scout subagents** in parallel to gather context across different areas of the codebase. Each scout gets a focused, targeted reconnaissance task.
+**Everything else** — spawn **4 scout subagents** in parallel to gather context across different areas of the codebase. Each scout gets a focused, targeted reconnaissance task. If a PDE exists, scouts should read it first and scout specifically for the decomposed intents.
 
 #### How to spawn scouts:
 1. Identify 4 distinct areas to investigate based on the task (examples below)
