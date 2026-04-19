@@ -119,6 +119,7 @@ function startFileViewerServer(opts: {
 			rejectSetup(err);
 			return;
 		}
+		const originalContent = initialContent;
 
 		let resolveResult: (result: FileViewerResult) => void;
 		const resultPromise = new Promise<FileViewerResult>((res) => {
@@ -205,12 +206,18 @@ function startFileViewerServer(opts: {
 				req.on("end", () => {
 					try {
 						const data = JSON.parse(body || "{}");
+						let diskContent = initialContent;
+						try {
+							diskContent = readFileSync(opts.filePath, "utf-8");
+						} catch {}
+						const finalContent = typeof diskContent === "string" ? diskContent : (typeof data.content === "string" ? data.content : initialContent);
+						const modified = !!data.modified || finalContent !== originalContent;
 						res.writeHead(200, { "Content-Type": "application/json" });
-						res.end(JSON.stringify({ ok: true }));
+						res.end(JSON.stringify({ ok: true, modified }));
 						resolveResult!({
 							action: "done",
-							modified: !!data.modified,
-							content: typeof data.content === "string" ? data.content : initialContent,
+							modified,
+							content: finalContent,
 						});
 					} catch {
 						res.writeHead(400, { "Content-Type": "application/json" });
@@ -310,8 +317,8 @@ export default function (pi: ExtensionAPI) {
 				content: [{
 					type: "text",
 					text: result.modified
-						? `File viewer closed. Changes were made${p.editable ? " and may have been saved" : ""}.`
-						: "File viewer closed.",
+						? `User pressed Done in the file viewer after making changes. The latest file content is on disk at ${p.file_path}.`
+						: `User pressed Done in the file viewer without changing ${p.file_path}.`,
 				}],
 			};
 		},
