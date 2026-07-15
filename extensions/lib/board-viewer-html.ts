@@ -228,8 +228,7 @@ export function generateBoardViewerHTML(opts: BoardViewerOptions): string {
 
   .column {
     flex: 1;
-    min-width: 240px;
-    max-width: 360px;
+    min-width: 200px;
     display: flex;
     flex-direction: column;
     gap: 0;
@@ -289,10 +288,10 @@ export function generateBoardViewerHTML(opts: BoardViewerOptions): string {
     border-top: none;
     border-radius: 0 0 var(--radius) var(--radius);
     background: var(--surface);
-    padding: 8px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
   }
 
   .column-body::-webkit-scrollbar { width: 4px; }
@@ -300,55 +299,78 @@ export function generateBoardViewerHTML(opts: BoardViewerOptions): string {
 
   .column-empty {
     text-align: center;
-    padding: 24px 12px;
+    padding: 32px 16px;
     color: var(--text-dim);
     font-size: 12px;
     font-style: italic;
+    opacity: 0.7;
   }
 
   /* ── Task Card ───────────────────────── */
   .task-card {
     background: var(--surface2);
     border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 10px 12px;
+    border-left: 4px solid var(--pending-color);
+    border-radius: var(--radius);
+    padding: 14px 16px;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: all 0.2s ease;
     position: relative;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   .task-card:hover {
     border-color: var(--border-light);
     background: var(--surface3);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
   }
 
   .task-card.expanded {
     border-color: var(--accent);
     background: var(--surface3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
+
+  /* Status-specific left border + subtle background tint */
+  .col-pending .task-card   { border-left-color: var(--pending-color); }
+  .col-working .task-card   { border-left-color: var(--working-color); background: linear-gradient(135deg, rgba(41, 128, 185, 0.06) 0%, var(--surface2) 100%); }
+  .col-completed .task-card { border-left-color: var(--success); background: linear-gradient(135deg, rgba(72, 216, 137, 0.05) 0%, var(--surface2) 100%); }
+  .col-failed .task-card    { border-left-color: var(--error); background: linear-gradient(135deg, rgba(232, 88, 88, 0.05) 0%, var(--surface2) 100%); }
+
+  .col-working .task-card:hover   { border-left-color: var(--accent-hover); }
+  .col-completed .task-card:hover { border-left-color: #5ce8a0; }
+  .col-failed .task-card:hover    { border-left-color: #ff6b6b; }
 
   .task-card .card-top {
     display: flex;
     align-items: flex-start;
-    gap: 8px;
+    gap: 10px;
   }
 
   .task-card .card-id {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 10px;
     color: var(--text-dim);
     flex-shrink: 0;
-    margin-top: 1px;
+    margin-top: 2px;
+    background: var(--surface);
+    padding: 2px 8px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-weight: 600;
+    letter-spacing: 0.3px;
   }
 
   .task-card .card-desc {
     font-size: 13px;
     color: var(--text);
-    line-height: 1.4;
+    line-height: 1.5;
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    font-weight: 450;
   }
 
   .task-card.expanded .card-desc {
@@ -360,26 +382,31 @@ export function generateBoardViewerHTML(opts: BoardViewerOptions): string {
     display: flex;
     align-items: center;
     gap: 6px;
-    margin-top: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
     flex-wrap: wrap;
   }
 
   .card-badge {
     font-size: 10px;
-    padding: 1px 6px;
+    padding: 2px 8px;
     border-radius: 10px;
-    font-weight: 500;
+    font-weight: 600;
     white-space: nowrap;
+    letter-spacing: 0.2px;
   }
 
   .badge-agent {
     background: var(--accent-dim);
     color: var(--accent);
+    border: 1px solid rgba(41, 128, 185, 0.2);
   }
 
   .badge-group {
     background: rgba(161, 134, 255, 0.12);
     color: #a186ff;
+    border: 1px solid rgba(161, 134, 255, 0.2);
   }
 
   .badge-ready {
@@ -392,13 +419,15 @@ export function generateBoardViewerHTML(opts: BoardViewerOptions): string {
     font-size: 10px;
     color: var(--text-dim);
     margin-left: auto;
+    font-family: var(--mono);
+    letter-spacing: 0.2px;
   }
 
   /* Expanded card details */
   .card-details {
     display: none;
-    margin-top: 10px;
-    padding-top: 10px;
+    margin-top: 12px;
+    padding-top: 12px;
     border-top: 1px solid var(--border);
     font-size: 12px;
     color: var(--text-muted);
@@ -409,13 +438,17 @@ export function generateBoardViewerHTML(opts: BoardViewerOptions): string {
   .card-details .detail-row {
     display: flex;
     gap: 8px;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
 
   .card-details .detail-label {
     color: var(--text-dim);
     min-width: 70px;
     flex-shrink: 0;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
   }
 
   .card-details .detail-value {
@@ -644,6 +677,38 @@ export function generateBoardViewerHTML(opts: BoardViewerOptions): string {
     max-width: 400px;
   }
 
+  /* ── Local Mode Banner ───────────────── */
+  .local-mode-banner {
+    display: none;
+    background: rgba(240, 180, 41, 0.1);
+    border-bottom: 1px solid rgba(240, 180, 41, 0.3);
+    padding: 8px 20px;
+    font-size: 13px;
+    color: var(--warning);
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    font-family: var(--mono);
+    letter-spacing: 0.3px;
+    transition: opacity 0.3s ease;
+  }
+
+  .local-mode-banner.visible { display: flex; }
+
+  .local-mode-banner .local-icon { font-size: 14px; }
+
+  .local-mode-banner .local-title-name {
+    color: var(--text);
+    font-weight: 600;
+    margin-left: 4px;
+  }
+
+  .local-mode-banner .local-hint {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
   /* ── Filter Active Indicator ─────────── */
   .filter-bar {
     display: none;
@@ -681,11 +746,11 @@ export function generateBoardViewerHTML(opts: BoardViewerOptions): string {
 
   /* ── Fade-in for new items ───────────── */
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-4px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
   }
 
-  .fade-in { animation: fadeIn 0.3s ease; }
+  .fade-in { animation: fadeIn 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
 
 </style>
 </head>
@@ -720,7 +785,7 @@ export function generateBoardViewerHTML(opts: BoardViewerOptions): string {
   <!-- Kanban Board -->
   <div class="board" id="board">
     <!-- Pending Column -->
-    <div class="column">
+    <div class="column col-pending">
       <div class="column-header col-pending">
         <div class="col-icon"></div>
         <span class="col-title">Pending</span>
@@ -732,7 +797,7 @@ export function generateBoardViewerHTML(opts: BoardViewerOptions): string {
     </div>
 
     <!-- Working Column -->
-    <div class="column">
+    <div class="column col-working">
       <div class="column-header col-working">
         <div class="col-icon pulse"></div>
         <span class="col-title">Working</span>
@@ -744,7 +809,7 @@ export function generateBoardViewerHTML(opts: BoardViewerOptions): string {
     </div>
 
     <!-- Completed Column -->
-    <div class="column">
+    <div class="column col-completed">
       <div class="column-header col-completed">
         <div class="col-icon"></div>
         <span class="col-title">Completed</span>
@@ -756,7 +821,7 @@ export function generateBoardViewerHTML(opts: BoardViewerOptions): string {
     </div>
 
     <!-- Failed Column -->
-    <div class="column">
+    <div class="column col-failed">
       <div class="column-header col-failed">
         <div class="col-icon"></div>
         <span class="col-title">Failed</span>
@@ -783,12 +848,21 @@ export function generateBoardViewerHTML(opts: BoardViewerOptions): string {
   </div>
 </div>
 
-<!-- Offline Overlay -->
+<!-- Local Mode Banner -->
+<div class="local-mode-banner" id="localModeBanner">
+  <span class="local-icon">⚡</span>
+  <span>Local Mode</span>
+  <span id="localTitleLabel" class="local-title-name"></span>
+  <span class="local-hint">Commander offline — showing local tasks</span>
+</div>
+
+<!-- Offline Overlay (only shown when no local tasks) -->
 <div class="offline-overlay" id="offlineOverlay">
   <div class="offline-icon">⚡</div>
   <div class="offline-title">Commander Offline</div>
   <div class="offline-desc">
     The Commander service is not running or not reachable.<br>
+    No local tasks found. Use <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;font-family:var(--mono);font-size:12px">tasks add</code> to get started.<br>
     The board will reconnect automatically when Commander comes back online.
   </div>
 </div>
@@ -815,6 +889,9 @@ export function generateBoardViewerHTML(opts: BoardViewerOptions): string {
   const filterBar = document.getElementById('filterBar');
   const filterAgent = document.getElementById('filterAgent');
   const offlineOverlay = document.getElementById('offlineOverlay');
+  const localModeBanner = document.getElementById('localModeBanner');
+  const localTitleLabel = document.getElementById('localTitleLabel');
+  const sidebar = document.getElementById('sidebar');
   const messageList = document.getElementById('messageList');
   const groupSection = document.getElementById('groupSection');
 
@@ -833,7 +910,7 @@ export function generateBoardViewerHTML(opts: BoardViewerOptions): string {
       const data = await res.json();
       lastData = data;
       renderBoard(data);
-      setStatus(data.connected ? 'connected' : 'offline');
+      setStatus(data.connected ? 'connected' : (data.localMode ? 'local' : 'offline'));
     } catch (err) {
       setStatus('offline');
       console.error('Fetch error:', err);
@@ -848,16 +925,35 @@ export function generateBoardViewerHTML(opts: BoardViewerOptions): string {
 
   // ── Status ───────────────────────────
   function setStatus(state) {
-    statusDot.className = 'status-dot ' + state;
+    statusDot.className = 'status-dot ' + (state === 'local' ? 'offline' : state);
     if (state === 'connected') {
       statusText.textContent = 'Connected';
       offlineOverlay.classList.remove('visible');
+      localModeBanner.classList.remove('visible');
+      // Restore Commander-only sections
+      agentStrip.style.display = '';
+      sidebar.style.display = '';
+    } else if (state === 'local') {
+      statusText.textContent = 'Local Mode';
+      offlineOverlay.classList.remove('visible');
+      localModeBanner.classList.add('visible');
+      // Update local title
+      if (lastData && lastData.localTitle) {
+        localTitleLabel.textContent = '— ' + lastData.localTitle;
+      } else {
+        localTitleLabel.textContent = '';
+      }
+      // Hide Commander-only sections (no data in local mode)
+      agentStrip.style.display = 'none';
+      sidebar.style.display = 'none';
     } else if (state === 'offline') {
       statusText.textContent = 'Offline';
       offlineOverlay.classList.add('visible');
+      localModeBanner.classList.remove('visible');
     } else {
       statusText.textContent = 'Stale';
       offlineOverlay.classList.remove('visible');
+      localModeBanner.classList.remove('visible');
     }
   }
 
