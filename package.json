@@ -1,6 +1,8 @@
 {
   "name": "@miadi/agent-pi",
-  "private": false,
+  "publishConfig": {
+    "access": "public"
+    },
   "version": "2.0.0",
   "description": "Multi-agent orchestration suite for Pi — 6 modes, 43 extensions, 11 themes",
   "keywords": [
