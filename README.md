@@ -26,6 +26,16 @@
 
 Everything is configuration — no forks, no patches. Just extensions, agent definitions, and YAML.
 
+## 🌀 Ava's ceremonial extensions
+
+Ava's presence, diary, council and widgets do not live in this repo. They have their own home, [avadisabelle/ava-ceremonial-pi](https://github.com/avadisabelle/ava-ceremonial-pi), so they load as a separate package and you can take one without the other. To have both in the same pi:
+
+```bash
+npm install -g @earendil-works/pi-coding-agent       # the original pi
+pi install git:github.com/avadisabelle/ava-agent-pi   # this suite: modes, teams, chains, pipelines
+pi install npm:@avadisabelle/ava-widgets              # Ava, beside them
+```
+
 ## Install
 
 ### One-line installer (recommended)
